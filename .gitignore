@@ -1,3 +1,16 @@
+
+*.log
+*.tmp
+*.iml
+
+# Dependency management
+/node_modules/
+
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
