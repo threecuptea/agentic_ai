@@ -7,4 +7,17 @@ This is a repo that I showcase what I learned from [AI Engineer Agentic Track: T
   Lesson learned and things to improve: LLM is non-deterministic and need to learn context engineering so that the result can be more predictable.  Add evaluator agenet(s) in important steps to ensure the quality.  Of course, API rate limit, so that those apps won't break my budget!!
 * [Trip Daily Planner](https://huggingface.co/spaces/threecuptea/trip_daily_planner): It's a CrewAI Gradio application that will get traveler's necessary information: destination, flight, hotel location, trip duration, personal interests, dining restrictions and preferences and email from Gradio UI. The application is using very popular [SerperDevTool](https://docs.crewai.com/en/tools/search-research/serperdevtool), [ScrapeWebsiteTool](https://crewai.com/en/tools/web-scraping/scrapewebsitetool) and would plan daily activities and restaurants for the trip and send daily planner to the email provided. I learned the following lessons:
 
-  How to overcome rate limit error: exceeds 30,000 tokens per minute.
+  How to overcome a common rate limit error: exceeds 30,000 tokens per minute. I get it working with the following Agent and SerperDevTool parameters. The most important parameter is SerperDevTool's n_results that decides numbers of tokens parsed in one run. It fails right away if I bump it up to 5.
+
+  Agent(
+  config=self.agents_config['personalized_activity_planner'],
+  tools=[SerperDevTool(n_results=3), ScrapeWebsiteTool()],
+  max_retry_limit=1,
+  max_iter=2,
+  respect_context_window=True,
+  verbose=True,
+  allow_delegation=False,
+  )
+
+  One advantage of using CrewAI is that it templatizes parameters so that destination, flight, hotel location, trip_duration, personal_interests, dining_restrictions_preferences and email are all passing as individual template variables rather than mushed together as an agent's user prompt. One disadvantage of CrewAI is that individual task completion is invisible.  Therefore, I cannot display the progress in UI.  I cannot get the final output of individual task either.
+* [Engineer Team Powered by CrewAI](https://huggingface.co/spaces/threecuptea/engineer_team): Engineer team is composed of engineer_lead, backend_engineer, frontend_engineer and test_engineer. Given the class_name, module_name and requirements, engineer_lead will layout all interface function calls in Markdown form and backend_engineer work on coding for the class followed by coding by frontend engineer and test_engineer. The  end product is an Account Management application of Trading Simulation Platform.
